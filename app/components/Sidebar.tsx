@@ -44,6 +44,7 @@ export default function Sidebar() {
       w={300}
       bg="white"
       paddingX="20px"
+      paddingBottom="20px"
       flexShrink={0}
       minH="100vh"
     >
