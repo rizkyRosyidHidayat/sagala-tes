@@ -20,9 +20,9 @@ export default function Header() {
     { text: "Main Dashboard", link: "/" },
   ];
   const icons = (className: string) => [
-    <BellIcon className={className} />,
-    <InformationCircleIcon className={className} />,
-    <PaintBrushIcon className={className} />,
+    <BellIcon key={1} className={className} />,
+    <InformationCircleIcon key={2} className={className} />,
+    <PaintBrushIcon key={3} className={className} />,
   ];
   return (
     <Box as="header" py="20px">
