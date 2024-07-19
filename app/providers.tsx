@@ -1,5 +1,6 @@
 "use client";
 
+import { inputTheme } from "@/components/theming/input";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 
 const theme = extendTheme({
@@ -18,6 +19,7 @@ const theme = extendTheme({
       "950": "#3f120b",
     },
   },
+  components: { Input: inputTheme }
 });
 
 export function Providers({ children }: { children: React.ReactNode }) {
