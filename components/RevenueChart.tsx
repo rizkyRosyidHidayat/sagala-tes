@@ -1,3 +1,4 @@
+import { getRandomInt } from "@/utils/helper";
 import { CalendarIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -30,29 +31,27 @@ import {
   Bar,
 } from "recharts";
 
-function getRandomInt() {
-  return Math.floor(Math.random() * 400);
-}
+
 
 const data = [
-  { name: "SEP", uv: getRandomInt(), pv: getRandomInt() },
-  { name: "OCT", uv: getRandomInt(), pv: getRandomInt() },
-  { name: "NOV", uv: getRandomInt(), pv: getRandomInt() },
-  { name: "DEC", uv: getRandomInt(), pv: getRandomInt() },
-  { name: "JAN", uv: getRandomInt(), pv: getRandomInt() },
-  { name: "FEB", uv: getRandomInt(), pv: getRandomInt() },
+  { name: "SEP", uv: getRandomInt(400), pv: getRandomInt(400) },
+  { name: "OCT", uv: getRandomInt(400), pv: getRandomInt(400) },
+  { name: "NOV", uv: getRandomInt(400), pv: getRandomInt(400) },
+  { name: "DEC", uv: getRandomInt(400), pv: getRandomInt(400) },
+  { name: "JAN", uv: getRandomInt(400), pv: getRandomInt(400) },
+  { name: "FEB", uv: getRandomInt(400), pv: getRandomInt(400) },
 ];
 
 const dataWeekly = [
-  { name: "17", uv: getRandomInt(), pv: getRandomInt() },
-  { name: "18", uv: getRandomInt(), pv: getRandomInt() },
-  { name: "19", uv: getRandomInt(), pv: getRandomInt() },
-  { name: "20", uv: getRandomInt(), pv: getRandomInt() },
-  { name: "21", uv: getRandomInt(), pv: getRandomInt() },
-  { name: "22", uv: getRandomInt(), pv: getRandomInt() },
-  { name: "23", uv: getRandomInt(), pv: getRandomInt() },
-  { name: "24", uv: getRandomInt(), pv: getRandomInt() },
-  { name: "25", uv: getRandomInt(), pv: getRandomInt() },
+  { name: "17", uv: getRandomInt(400), pv: getRandomInt(400) },
+  { name: "18", uv: getRandomInt(400), pv: getRandomInt(400) },
+  { name: "19", uv: getRandomInt(400), pv: getRandomInt(400) },
+  { name: "20", uv: getRandomInt(400), pv: getRandomInt(400) },
+  { name: "21", uv: getRandomInt(400), pv: getRandomInt(400) },
+  { name: "22", uv: getRandomInt(400), pv: getRandomInt(400) },
+  { name: "23", uv: getRandomInt(400), pv: getRandomInt(400) },
+  { name: "24", uv: getRandomInt(400), pv: getRandomInt(400) },
+  { name: "25", uv: getRandomInt(400), pv: getRandomInt(400) },
 ];
 
 class CustomizedAxisTick extends PureComponent {
