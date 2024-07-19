@@ -7,6 +7,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Checkbox,
   Circle,
   Flex,
   GridItem,
@@ -26,6 +27,7 @@ import {
   StatLabel,
   StatNumber,
   Table,
+  TableContainer,
   Tbody,
   Td,
   Text,
@@ -34,7 +36,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
-import { PureComponent } from "react";
+import { PureComponent, useEffect, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -127,8 +129,13 @@ class CustomizedAxisTick extends PureComponent {
   }
 }
 
-
 export default function CheckTable() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return <></>;
   return (
     <SimpleGrid columns={4} gap="20px">
       <Box as={GridItem} colSpan={2}>
@@ -146,35 +153,41 @@ export default function CheckTable() {
             </InputGroup>
           </CardHeader>
           <CardBody pt={0} px={0}>
-            <Table>
-              <Thead>
-                <Tr>
-                  {tableHead.map((text, headKey) => (
-                    <Th key={headKey} color="gray.400">
-                      {text}
-                    </Th>
-                  ))}
-                </Tr>
-              </Thead>
-              <Tbody>
-                {dataTable.map((data, dataKey) => (
-                  <Tr key={data.name}>
-                    <Td border={0} fontSize="sm">
-                      {data.name}
-                    </Td>
-                    <Td border={0} fontSize="sm">
-                      {data.progress}
-                    </Td>
-                    <Td border={0} fontSize="sm">
-                      {data.quantity}
-                    </Td>
-                    <Td border={0} fontSize="sm">
-                      {formatDate(data.date)}
-                    </Td>
+            <TableContainer>
+              <Table>
+                <Thead>
+                  <Tr>
+                    {tableHead.map((text, headKey) => (
+                      <Th key={headKey} color="gray.400">
+                        {text}
+                      </Th>
+                    ))}
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
+                </Thead>
+                <Tbody>
+                  {dataTable.map((data, dataKey) => (
+                    <Tr key={dataKey}>
+                      <Td border={0}>
+                        <Checkbox colorScheme="primary">
+                          <Text as="span" fontSize="sm">
+                            {data.name}
+                          </Text>
+                        </Checkbox>
+                      </Td>
+                      <Td border={0} fontSize="sm">
+                        {data.progress}
+                      </Td>
+                      <Td border={0} fontSize="sm">
+                        {data.quantity}
+                      </Td>
+                      <Td border={0} fontSize="sm">
+                        {formatDate(data.date)}
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </TableContainer>
           </CardBody>
         </Card>
       </Box>
