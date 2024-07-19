@@ -102,7 +102,7 @@ export default function RevenueChart() {
           <Box flexShrink={0}>
             <Stat>
               <StatLabel color="gray.400">Total Spent</StatLabel>
-              <StatNumber>345,670</StatNumber>
+              <StatNumber color="primary.900">345,670</StatNumber>
               <StatHelpText>
                 <StatArrow type="increase" />
                 <Text as="b" color="green.400">
@@ -147,7 +147,7 @@ export default function RevenueChart() {
       </Card>
       <Card variant="outline" borderRadius="24px" border="0px">
         <CardHeader as={Flex} alignItems="center">
-          <Heading size="md">Weekly Revenue</Heading>
+          <Heading size="md" color="primary.900">Weekly Revenue</Heading>
           <Spacer />
           <IconButton
             bg="gray.50"
