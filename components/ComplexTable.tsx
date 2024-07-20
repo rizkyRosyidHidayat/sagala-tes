@@ -1,4 +1,4 @@
-import { formatDate, getRandomInt } from "@/utils/helper";
+"use client";
 import {
   Card,
   CardBody,
@@ -20,61 +20,35 @@ import {
   InputGroup,
   InputLeftElement,
   Input,
-  Progress,
   Avatar,
   Checkbox,
+  TableCaption,
+  Center,
+  Button,
 } from "@chakra-ui/react";
 import {
   Bars2Icon,
   CheckCircleIcon,
-  InformationCircleIcon,
   MagnifyingGlassIcon,
-  XCircleIcon,
+  PlusIcon,
 } from "@heroicons/react/16/solid";
 import { Calendar } from "@nextui-org/calendar";
 import { parseDate } from "@internationalized/date";
+import React, { useReducer, useState } from "react";
+import {
+  dataTable,
+  DataTableType,
+  reducerComplexTable,
+} from "@/reducer/complex-table";
+import DataEmpty from "./DataEmpty";
+import TextInput from "./TableEdit/TextInput";
+import SelectInput from "./TableEdit/SelectInput";
+import NumberInput from "./TableEdit/NumberInput";
+import DateInput from "./TableEdit/DateInput";
+import { getRandomInt } from "@/utils/helper";
 
 const tableHead = ["NAME", "STATUS", "PROGRESS", "DATE"];
-const iconStatus = (status: string) =>
-  status === "Approved" ? (
-    <CheckCircleIcon className="size-5 text-green-500" />
-  ) : status === "Disable" ? (
-    <XCircleIcon className="size-5 text-red-500" />
-  ) : (
-    <InformationCircleIcon className="size-5 text-yellow-500" />
-  );
-const dataTable = [
-  {
-    name: "Fried Rice",
-    progress: getRandomInt(100),
-    status: "Approved",
-    date: "2024-05-20",
-  },
-  {
-    name: "Coffe Capuchino",
-    progress: getRandomInt(100),
-    status: "Disable",
-    date: "2024-07-19",
-  },
-  {
-    name: "Hot Wings Chinken",
-    progress: getRandomInt(100),
-    status: "Error",
-    date: "2024-04-23",
-  },
-  {
-    name: "Thai Tea Boba",
-    progress: getRandomInt(100),
-    status: "Approved",
-    date: "2024-11-22",
-  },
-  {
-    name: "Matcha Original",
-    progress: getRandomInt(100),
-    status: "Approved",
-    date: "2024-01-09",
-  },
-];
+
 const dataTask = [
   { id: 0, text: "Landing Page Design" },
   { id: 1, text: "Dashboard Builder" },
@@ -82,26 +56,119 @@ const dataTask = [
   { id: 3, text: "Illustration" },
   { id: 4, text: "Promotional LP" },
 ];
+const initAddData: DataTableType = {
+  id: getRandomInt(1000),
+  name: "",
+  progress: 0,
+  date: "",
+  status: "",
+};
 export default function ComplexTable() {
+  const [stateDataTable, dispatchDataTable] = useReducer(reducerComplexTable, {
+    data: dataTable,
+  });
+  const [deletedId, setDeletedId] = useState<number[]>([]);
+  function updateDeletedId(checked: boolean, id: number) {
+    if (checked) setDeletedId([...deletedId, id]);
+    else setDeletedId(deletedId.filter((item) => item !== id));
+  }
+  const [isAddData, setIsAddData] = useState<boolean>(false);
+  const [addData, setAddData] = useState<DataTableType>(initAddData);
+
   return (
     <SimpleGrid columns={4} gap="20px">
       <GridItem colSpan={2}>
         <Card variant="outline" borderRadius="24px" border="0px" height="100%">
           <CardHeader as={Flex} alignItems="center">
             <Heading size="md" color="primary.900">
-              Check Table
+              Complex Table
             </Heading>
             <Spacer />
             <InputGroup width={300} variant="pill">
               <InputLeftElement pointerEvents="none">
                 <MagnifyingGlassIcon className="size-5 text-gray-500" />
               </InputLeftElement>
-              <Input type="text" placeholder="Search data" />
+              <Input
+                type="text"
+                placeholder="Search data"
+                onChange={(e) =>
+                  dispatchDataTable({ type: "search", payload: e.target.value })
+                }
+              />
             </InputGroup>
           </CardHeader>
-          <CardBody pt={0} px={0}>
+          <CardBody pt={0}>
             <TableContainer>
               <Table size="sm">
+                {deletedId.length ? (
+                  <TableCaption>
+                    <Center>
+                      <Text as="p" color="red.500" mr="12px">
+                        Are you sure to delete {deletedId.length} data ?
+                      </Text>
+                      <Text
+                        as="span"
+                        color="red.500"
+                        mr="12px"
+                        cursor="pointer"
+                        className="hover:underline"
+                        onClick={() => {
+                          dispatchDataTable({
+                            type: "delete",
+                            payload: deletedId,
+                          });
+                          setDeletedId([]);
+                        }}
+                      >
+                        YES
+                      </Text>
+                      <Text
+                        as="span"
+                        color="gray.400"
+                        cursor="pointer"
+                        className="hover:underline"
+                        onClick={() => setDeletedId([])}
+                      >
+                        CANCEL
+                      </Text>
+                    </Center>
+                  </TableCaption>
+                ) : (
+                  <TableCaption py={0}>
+                    {isAddData ? (
+                      <Button
+                        size="sm"
+                        colorScheme="gray"
+                        variant="ghost"
+                        width="50%"
+                        onClick={() => {
+                          setIsAddData(false);
+                          setAddData(initAddData);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    ) : null}
+                    <Button
+                      size="sm"
+                      colorScheme="primary"
+                      variant="ghost"
+                      width={isAddData ? "50%" : "100%"}
+                      leftIcon={<PlusIcon className="size-4" />}
+                      onClick={() => {
+                        if (isAddData) {
+                          setIsAddData(false);
+                          dispatchDataTable({ type: "add", payload: addData });
+                          console.log("add");
+                          
+                          setAddData(initAddData);
+                        } else setIsAddData(true);
+                      }}
+                    >
+                      {isAddData ? "Save Data" : "Add Data"}
+                    </Button>
+                  </TableCaption>
+                )}
                 <Thead>
                   <Tr>
                     {tableHead.map((text, headKey) => (
@@ -111,30 +178,115 @@ export default function ComplexTable() {
                     ))}
                   </Tr>
                 </Thead>
-                <Tbody>
-                  {dataTable.map((data, dataKey) => (
-                    <Tr key={dataKey}>
-                      <Td border={0} fontSize="sm">
-                        {data.name}
-                      </Td>
-                      <Td border={0} fontSize="sm">
-                        <Flex alignItems="center" gap="8px">
-                          {iconStatus(data.status)}
-                          {data.status}
-                        </Flex>
-                      </Td>
-                      <Td border={0} fontSize="sm">
-                        <Progress
-                          value={data.progress}
-                          size="sm"
-                          borderRadius="full"
-                        />
-                      </Td>
-                      <Td border={0} fontSize="sm">
-                        {formatDate(data.date)}
+                <Tbody maxHeight="185px" overflowY="auto">
+                  {stateDataTable.data.length === 0 ? (
+                    <Tr>
+                      <Td colSpan={tableHead.length + 1}>
+                        <DataEmpty />
                       </Td>
                     </Tr>
-                  ))}
+                  ) : (
+                    stateDataTable.data.map((data, dataKey) => (
+                      <Tr key={dataKey}>
+                        <Td border={0}>
+                          <Flex alignItems="center" gap="8px">
+                            <Checkbox
+                              isChecked={deletedId.includes(data.id)}
+                              colorScheme="primary"
+                              onChange={(e) =>
+                                updateDeletedId(e.target.checked, data.id)
+                              }
+                            />
+                            <TextInput
+                              value={data.name}
+                              emitValue={(val) =>
+                                dispatchDataTable({
+                                  type: "edit",
+                                  payload: { ...data, name: val },
+                                })
+                              }
+                            />
+                          </Flex>
+                        </Td>
+                        <Td border={0} fontSize="sm">
+                          <SelectInput
+                            value={data.status}
+                            emitValue={(val) =>
+                              dispatchDataTable({
+                                type: "edit",
+                                payload: { ...data, status: val },
+                              })
+                            }
+                          />
+                        </Td>
+                        <Td border={0} fontSize="sm">
+                          <NumberInput
+                            value={data.progress}
+                            emitValue={(val) =>
+                              dispatchDataTable({
+                                type: "edit",
+                                payload: { ...data, progress: val },
+                              })
+                            }
+                            max={100}
+                            isProgress
+                          />
+                        </Td>
+                        <Td border={0} fontSize="sm">
+                          <DateInput
+                            value={data.date}
+                            emitValue={(val) =>
+                              dispatchDataTable({
+                                type: "edit",
+                                payload: { ...data, date: val },
+                              })
+                            }
+                          />
+                        </Td>
+                      </Tr>
+                    ))
+                  )}
+                  {isAddData ? (
+                    <Tr>
+                      <Td border={0}>
+                        <TextInput
+                          value={addData.name}
+                          emitValue={(val) =>
+                            setAddData({ ...addData, name: val })
+                          }
+                          active
+                        />
+                      </Td>
+                      <Td border={0}>
+                        <SelectInput
+                          value={addData.status}
+                          emitValue={(val) =>
+                            setAddData({ ...addData, status: val })
+                          }
+                          active
+                        />
+                      </Td>
+                      <Td border={0}>
+                        <NumberInput
+                          value={addData.progress}
+                          emitValue={(val) =>
+                            setAddData({ ...addData, progress: val })
+                          }
+                          max={100}
+                          active
+                        />
+                      </Td>
+                      <Td border={0}>
+                        <DateInput
+                          value={addData.date}
+                          emitValue={(val) =>
+                            setAddData({ ...addData, date: val })
+                          }
+                          active
+                        />
+                      </Td>
+                    </Tr>
+                  ) : null}
                 </Tbody>
               </Table>
             </TableContainer>
@@ -142,7 +294,7 @@ export default function ComplexTable() {
         </Card>
       </GridItem>
       <GridItem colSpan={1}>
-        <Card variant="outline" borderRadius="24px" border="0px">
+        <Card variant="outline" borderRadius="24px" border="0px" height="100%">
           <CardHeader as={Flex} alignItems="center" gap="12px">
             <Avatar
               size="sm"
@@ -175,7 +327,8 @@ export default function ComplexTable() {
               base: "h-full w-full shadow-none",
               content: "w-full",
               headerWrapper: "w-full",
-              cellButton: "data-[selected=true]:bg-primary-500"
+              gridHeader: "shadow-none border-b",
+              cellButton: "data-[selected=true]:bg-primary-500",
             }}
             calendarWidth="100%"
             aria-label="Date"
