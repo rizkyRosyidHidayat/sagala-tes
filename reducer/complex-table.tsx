@@ -86,7 +86,6 @@ export function reducerComplexTable(
     };
   } else if (action.type === "add" && action.payload) {
     const payload = action.payload as DataTableType;
-    console.log(dataTable.findIndex((item) => item.id === payload.id));
     
     if (dataTable.findIndex((item) => item.id === payload.id) === -1)
       dataTable = [...dataTable, payload];
