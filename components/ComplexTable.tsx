@@ -170,8 +170,6 @@ export default function ComplexTable() {
                         if (isAddData) {
                           setIsAddData(false);
                           dispatchDataTable({ type: "add", payload: addData });
-                          console.log("add");
-
                           setAddData(initAddData);
                         } else setIsAddData(true);
                       }}
