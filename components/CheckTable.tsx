@@ -1,8 +1,14 @@
 "use client";
+import {
+  dataTable,
+  DataTableType,
+  reducerCheckTable,
+} from "@/reducer/check-table";
 import { formatDate, getRandomInt } from "@/utils/helper";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
   Card,
   CardBody,
   CardFooter,
@@ -28,6 +34,7 @@ import {
   StatLabel,
   StatNumber,
   Table,
+  TableCaption,
   TableContainer,
   Tbody,
   Td,
@@ -36,8 +43,8 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { MagnifyingGlassIcon } from "@heroicons/react/16/solid";
-import { PureComponent, useEffect, useState } from "react";
+import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/16/solid";
+import { PureComponent, useEffect, useReducer, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -49,46 +56,12 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import DataEmpty from "./DataEmpty";
+import TextInput from "./TableEdit/TextInput";
+import NumberInput from "./TableEdit/NumberInput";
+import DateInput from "./TableEdit/DateInput";
 
 const tableHead = ["NAME", "PROGRESS", "QUANTITY", "DATE"];
-type DataTableType = {
-  name: string;
-  progress: string;
-  quantity: number;
-  date: string;
-};
-const dataTable: DataTableType[] = [
-  {
-    name: "Fried Rice",
-    progress: getRandomInt(100) + "%",
-    quantity: getRandomInt(2000),
-    date: "2024-05-20",
-  },
-  {
-    name: "Coffe Capuchino",
-    progress: getRandomInt(100) + "%",
-    quantity: getRandomInt(2000),
-    date: "2024-07-19",
-  },
-  {
-    name: "Hot Wings Chinken",
-    progress: getRandomInt(100) + "%",
-    quantity: getRandomInt(2000),
-    date: "2024-04-23",
-  },
-  {
-    name: "Thai Tea Boba",
-    progress: getRandomInt(100) + "%",
-    quantity: getRandomInt(2000),
-    date: "2024-11-22",
-  },
-  {
-    name: "Matcha Original",
-    progress: getRandomInt(100) + "%",
-    quantity: getRandomInt(2000),
-    date: "2024-01-09",
-  },
-];
 
 const dataVisitors = [
   { name: "00", uv: getRandomInt(400) },
@@ -129,8 +102,26 @@ class CustomizedAxisTick extends PureComponent {
     );
   }
 }
+const initAddData: DataTableType = {
+  id: getRandomInt(1000),
+  name: "",
+  quantity: 0,
+  date: "",
+  progress: 0,
+};
 
 export default function CheckTable() {
+  const [stateDataTable, dispatchDataTable] = useReducer(reducerCheckTable, {
+    data: dataTable,
+  });
+  const [deletedId, setDeletedId] = useState<number[]>([]);
+  function updateDeletedId(checked: boolean, id: number) {
+    if (checked) setDeletedId([...deletedId, id]);
+    else setDeletedId(deletedId.filter((item) => item !== id));
+  }
+  const [isAddData, setIsAddData] = useState<boolean>(false);
+  const [addData, setAddData] = useState<DataTableType>(initAddData);
+
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -144,6 +135,7 @@ export default function CheckTable() {
           variant="outline"
           borderRadius={["12px", "12px", "24px"]}
           border="0px"
+          height="100%"
         >
           <CardHeader
             as={Flex}
@@ -160,12 +152,85 @@ export default function CheckTable() {
               <InputLeftElement pointerEvents="none">
                 <MagnifyingGlassIcon className="size-5 text-gray-500" />
               </InputLeftElement>
-              <Input type="text" placeholder="Search data" />
+              <Input
+                type="text"
+                placeholder="Search data"
+                onChange={(e) =>
+                  dispatchDataTable({ type: "search", payload: e.target.value })
+                }
+              />
             </InputGroup>
           </CardHeader>
           <CardBody pt={0} px={0} pb={[3, 3, 5]}>
             <TableContainer>
               <Table>
+                {deletedId.length ? (
+                  <TableCaption>
+                    <Center>
+                      <Text as="p" color="red.500" mr="12px">
+                        Are you sure to delete {deletedId.length} data ?
+                      </Text>
+                      <Text
+                        as="span"
+                        color="red.500"
+                        mr="12px"
+                        cursor="pointer"
+                        className="hover:underline"
+                        onClick={() => {
+                          dispatchDataTable({
+                            type: "delete",
+                            payload: deletedId,
+                          });
+                          setDeletedId([]);
+                        }}
+                      >
+                        YES
+                      </Text>
+                      <Text
+                        as="span"
+                        color="gray.400"
+                        cursor="pointer"
+                        className="hover:underline"
+                        onClick={() => setDeletedId([])}
+                      >
+                        CANCEL
+                      </Text>
+                    </Center>
+                  </TableCaption>
+                ) : (
+                  <TableCaption py={0}>
+                    {isAddData ? (
+                      <Button
+                        size="sm"
+                        colorScheme="gray"
+                        variant="ghost"
+                        width="50%"
+                        onClick={() => {
+                          setIsAddData(false);
+                          setAddData(initAddData);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    ) : null}
+                    <Button
+                      size="sm"
+                      colorScheme="primary"
+                      variant="ghost"
+                      width={isAddData ? "50%" : "100%"}
+                      leftIcon={<PlusIcon className="size-4" />}
+                      onClick={() => {
+                        if (isAddData) {
+                          setIsAddData(false);
+                          dispatchDataTable({ type: "add", payload: addData });
+                          setAddData(initAddData);
+                        } else setIsAddData(true);
+                      }}
+                    >
+                      {isAddData ? "Save Data" : "Add Data"}
+                    </Button>
+                  </TableCaption>
+                )}
                 <Thead>
                   <Tr>
                     {tableHead.map((text, headKey) => (
@@ -176,26 +241,116 @@ export default function CheckTable() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {dataTable.map((data, dataKey) => (
-                    <Tr key={dataKey}>
-                      <Td border={0}>
-                        <Checkbox colorScheme="primary">
-                          <Text as="span" fontSize="sm">
-                            {data.name}
-                          </Text>
-                        </Checkbox>
-                      </Td>
-                      <Td border={0} fontSize="sm">
-                        {data.progress}
-                      </Td>
-                      <Td border={0} fontSize="sm">
-                        {data.quantity}
-                      </Td>
-                      <Td border={0} fontSize="sm">
-                        {formatDate(data.date)}
+                  {stateDataTable.data.length === 0 ? (
+                    <Tr>
+                      <Td colSpan={tableHead.length + 1}>
+                        <DataEmpty />
                       </Td>
                     </Tr>
-                  ))}
+                  ) : (
+                    stateDataTable.data.map((data, dataKey) => (
+                      <Tr key={dataKey}>
+                        <Td border={0}>
+                          <Flex alignItems="center" gap="8px">
+                            <Checkbox
+                              isChecked={deletedId.includes(data.id)}
+                              colorScheme="primary"
+                              onChange={(e) =>
+                                updateDeletedId(e.target.checked, data.id)
+                              }
+                            />
+                            <TextInput
+                              value={data.name}
+                              emitValue={(val) =>
+                                dispatchDataTable({
+                                  type: "edit",
+                                  payload: { ...data, name: val },
+                                })
+                              }
+                            />
+                          </Flex>
+                        </Td>
+                        <Td border={0} fontSize="sm">
+                          <NumberInput
+                            value={data.progress}
+                            emitValue={(val) =>
+                              dispatchDataTable({
+                                type: "edit",
+                                payload: { ...data, progress: val },
+                              })
+                            }
+                            max={100}
+                            percent
+                          />
+                        </Td>
+                        <Td border={0} fontSize="sm">
+                          <NumberInput
+                            value={data.quantity}
+                            emitValue={(val) =>
+                              dispatchDataTable({
+                                type: "edit",
+                                payload: { ...data, quantity: val },
+                              })
+                            }
+                            max={2000}
+                          />
+                        </Td>
+                        <Td border={0} fontSize="sm">
+                          <DateInput
+                            value={data.date}
+                            emitValue={(val) =>
+                              dispatchDataTable({
+                                type: "edit",
+                                payload: { ...data, date: val },
+                              })
+                            }
+                          />
+                        </Td>
+                      </Tr>
+                    ))
+                  )}
+                  {isAddData ? (
+                    <Tr>
+                      <Td border={0}>
+                        <TextInput
+                          value={addData.name}
+                          emitValue={(val) =>
+                            setAddData({ ...addData, name: val })
+                          }
+                          active
+                        />
+                      </Td>
+                      <Td border={0}>
+                        <NumberInput
+                          value={addData.progress}
+                          emitValue={(val) =>
+                            setAddData({ ...addData, progress: val })
+                          }
+                          max={100}
+                          active
+                        />
+                      </Td>
+                      <Td border={0}>
+                        <NumberInput
+                          value={addData.quantity}
+                          emitValue={(val) =>
+                            setAddData({ ...addData, quantity: val })
+                          }
+                          max={2000}
+                          active
+                        />
+                      </Td>
+                      <Td border={0}>
+                        <DateInput
+                          value={addData.date}
+                          emitValue={(val) =>
+                            setAddData({ ...addData, date: val })
+                          }
+                          active
+                        />
+                      </Td>
+                    </Tr>
+                  ) : null}
                 </Tbody>
               </Table>
             </TableContainer>
