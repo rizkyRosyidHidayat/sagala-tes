@@ -76,10 +76,21 @@ export default function ComplexTable() {
   const [addData, setAddData] = useState<DataTableType>(initAddData);
 
   return (
-    <SimpleGrid columns={4} gap="20px">
-      <GridItem colSpan={2}>
-        <Card variant="outline" borderRadius="24px" border="0px" height="100%">
-          <CardHeader as={Flex} alignItems="center">
+    <SimpleGrid columns={[1, 1, 1, 2, 4, 4]} gap={[2, 2, 4, 4, 5, 5]}>
+      <GridItem colSpan={[null, null, 2, 2, 2, 2]}>
+        <Card
+          variant="outline"
+          borderRadius={["12px", "12px", "24px"]}
+          border="0px"
+          height="100%"
+        >
+          <CardHeader
+            as={Flex}
+            flexDirection={["column", "column", "row"]}
+            gap={[2, 2, 4]}
+            p={[3, 3, 5]}
+            alignItems={["flex-start", "flex-start", "center"]}
+          >
             <Heading size="md" color="primary.900">
               Complex Table
             </Heading>
@@ -97,7 +108,7 @@ export default function ComplexTable() {
               />
             </InputGroup>
           </CardHeader>
-          <CardBody pt={0}>
+          <CardBody pt={0} px={0} pb={[3, 3, 5]}>
             <TableContainer>
               <Table size="sm">
                 {deletedId.length ? (
@@ -160,7 +171,7 @@ export default function ComplexTable() {
                           setIsAddData(false);
                           dispatchDataTable({ type: "add", payload: addData });
                           console.log("add");
-                          
+
                           setAddData(initAddData);
                         } else setIsAddData(true);
                       }}
@@ -293,9 +304,14 @@ export default function ComplexTable() {
           </CardBody>
         </Card>
       </GridItem>
-      <GridItem colSpan={1}>
-        <Card variant="outline" borderRadius="24px" border="0px" height="100%">
-          <CardHeader as={Flex} alignItems="center" gap="12px">
+      <GridItem>
+        <Card
+          variant="outline"
+          borderRadius={["12px", "12px", "24px"]}
+          border="0px"
+          height="100%"
+        >
+          <CardHeader p={[3, 3, 5]} as={Flex} alignItems="center" gap="12px">
             <Avatar
               size="sm"
               bg="gray.100"
@@ -305,11 +321,16 @@ export default function ComplexTable() {
               Tasks
             </Heading>
           </CardHeader>
-          <CardBody pt={0}>
+          <CardBody px={[3, 3, 5]} pb={[3, 3, 5]} pt={0}>
             {dataTask.map((task, taskKey) => (
-              <Flex key={taskKey} alignItems="center" gap="12px" py="12px">
+              <Flex
+                key={taskKey}
+                alignItems="center"
+                gap="12px"
+                py={["6px", "6px", "6px", "8px", "12px", "12px"]}
+              >
                 <Checkbox colorScheme="primary">
-                  <Text as="b" ml="8px">
+                  <Text as="b" ml="8px" fontSize={["xs", "xs", "sm", "sm"]}>
                     {task.text}
                   </Text>
                 </Checkbox>
@@ -320,8 +341,13 @@ export default function ComplexTable() {
           </CardBody>
         </Card>
       </GridItem>
-      <GridItem colSpan={1}>
-        <Card variant="outline" borderRadius="24px" border="0px" height="100%">
+      <GridItem>
+        <Card
+          variant="outline"
+          borderRadius={["12px", "12px", "24px"]}
+          border="0px"
+          height="100%"
+        >
           <Calendar
             classNames={{
               base: "h-full w-full shadow-none",

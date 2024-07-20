@@ -25,6 +25,15 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary-300;
+  @apply rounded-full;
+}
 
 @layer utilities {
   .text-balance {

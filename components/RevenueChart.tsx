@@ -31,8 +31,6 @@ import {
   Bar,
 } from "recharts";
 
-
-
 const data = [
   { name: "SEP", uv: getRandomInt(400), pv: getRandomInt(400) },
   { name: "OCT", uv: getRandomInt(400), pv: getRandomInt(400) },
@@ -64,7 +62,7 @@ class CustomizedAxisTick extends PureComponent {
           x={0}
           y={0}
           dy={16}
-          fontSize={14}
+          className="text-xs lg:text-sm"
           textAnchor="middle"
           dominantBaseline="middle"
           fill="#A0AEC0"
@@ -78,15 +76,20 @@ class CustomizedAxisTick extends PureComponent {
 
 export default function RevenueChart() {
   return (
-    <SimpleGrid columns={2} gap="20px">
-      <Card variant="outline" borderRadius="24px" border="0px">
-        <CardHeader as={Flex} alignItems="center">
+    <SimpleGrid columns={[1, 1, 1, 1, 2, 2]} gap={[2, 2, 4, 4, 5, 5]}>
+      <Card
+        variant="outline"
+        borderRadius={["12px", "12px", "24px"]}
+        border="0px"
+      >
+        <CardHeader p={[3, 3, 5]} as={Flex} alignItems="center">
           <Button
             variant="solid"
             leftIcon={<CalendarIcon color="gray.400" />}
             color="gray.400"
             fontSize="sm"
             bg="gray.50"
+            size={["sm", "sm", "md"]}
           >
             This month
           </Button>
@@ -94,15 +97,32 @@ export default function RevenueChart() {
           <IconButton
             bg="gray.50"
             aria-label="chart revenue this month"
-            icon={<ChartBarIcon className="size-6 text-primary-500" />}
+            icon={
+              <ChartBarIcon className="size-5 lg:size-6 text-primary-500" />
+            }
+            size={["sm", "sm", "md"]}
           />
         </CardHeader>
-        <CardBody as={Flex} pt="0px" gap="24px">
-          <Box flexShrink={0}>
+        <CardBody
+          as={Flex}
+          flexDirection={["column", "column", "row"]}
+          px={[3, 3, 5]}
+          pb={[3, 3, 5]}
+          pt={0}
+          gap="24px"
+        >
+          <Flex flexDirection={["row", "row", "column"]} flexShrink={0}>
             <Stat>
-              <StatLabel color="gray.400">Total Spent</StatLabel>
-              <StatNumber color="primary.900">345,670</StatNumber>
-              <StatHelpText>
+              <StatLabel color="gray.400" fontSize={["xs", "xs", "sm"]}>
+                Total Spent
+              </StatLabel>
+              <StatNumber
+                fontSize={["lg", "lg", "xl", "xl"]}
+                color="primary.900"
+              >
+                345,670
+              </StatNumber>
+              <StatHelpText fontSize={["xs", "xs", "sm"]}>
                 <StatArrow type="increase" />
                 <Text as="b" color="green.400">
                   +23.36%
@@ -110,12 +130,12 @@ export default function RevenueChart() {
               </StatHelpText>
             </Stat>
             <Flex alignItems="center" gap="8px">
-              <CheckCircleIcon className="size-5 text-green-500" />
-              <Text as="b" color="green.400">
+              <CheckCircleIcon className="size-4 lg:size-5 text-green-500" />
+              <Text as="b" color="green.400" fontSize={["xs", "xs", "sm"]}>
                 On track
               </Text>
             </Flex>
-          </Box>
+          </Flex>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={data}>
               <Line
@@ -138,15 +158,21 @@ export default function RevenueChart() {
                 tickLine={false}
                 tick={<CustomizedAxisTick />}
               />
-              <YAxis tick={false} axisLine={false} width={10} />
+              <YAxis tick={false} axisLine={false} width={15} />
               <Tooltip />
             </LineChart>
           </ResponsiveContainer>
         </CardBody>
       </Card>
-      <Card variant="outline" borderRadius="24px" border="0px">
-        <CardHeader as={Flex} alignItems="center">
-          <Heading size="md" color="primary.900">Weekly Revenue</Heading>
+      <Card
+        variant="outline"
+        borderRadius={["12px", "12px", "24px"]}
+        border="0px"
+      >
+        <CardHeader p={[3, 3, 5]} as={Flex} alignItems="center">
+          <Heading size="md" color="primary.900">
+            Weekly Revenue
+          </Heading>
           <Spacer />
           <IconButton
             bg="gray.50"
@@ -154,7 +180,7 @@ export default function RevenueChart() {
             icon={<ChartBarIcon className="size-6 text-primary-500" />}
           />
         </CardHeader>
-        <CardBody pt="0px">
+        <CardBody px={[3, 3, 5]} pb={[3, 3, 5]} pt={0}>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={dataWeekly}>
               <XAxis

@@ -7,6 +7,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Center,
   Checkbox,
   Circle,
   Flex,
@@ -137,10 +138,20 @@ export default function CheckTable() {
 
   if (!mounted) return <></>;
   return (
-    <SimpleGrid columns={4} gap="20px">
-      <Box as={GridItem} colSpan={2}>
-        <Card variant="outline" borderRadius="24px" border="0px">
-          <CardHeader as={Flex} alignItems="center">
+    <SimpleGrid columns={[1, 1, 1, 2, 4, 4]} gap={[2, 2, 4, 4, 5, 5]}>
+      <Box as={GridItem} colSpan={[null, null, 2, 2, 2, 2]}>
+        <Card
+          variant="outline"
+          borderRadius={["12px", "12px", "24px"]}
+          border="0px"
+        >
+          <CardHeader
+            as={Flex}
+            flexDirection={["column", "column", "row"]}
+            gap={[2, 2, 4]}
+            p={[3, 3, 5]}
+            alignItems={["flex-start", "flex-start", "center"]}
+          >
             <Heading size="md" color="primary.900">
               Check Table
             </Heading>
@@ -152,7 +163,7 @@ export default function CheckTable() {
               <Input type="text" placeholder="Search data" />
             </InputGroup>
           </CardHeader>
-          <CardBody pt={0} px={0}>
+          <CardBody pt={0} px={0} pb={[3, 3, 5]}>
             <TableContainer>
               <Table>
                 <Thead>
@@ -191,9 +202,14 @@ export default function CheckTable() {
           </CardBody>
         </Card>
       </Box>
-      <Box as={GridItem} colSpan={1}>
-        <Card variant="outline" borderRadius="24px" border="0px" height="100%">
-          <CardBody>
+      <Box as={GridItem}>
+        <Card
+          variant="outline"
+          borderRadius={["12px", "12px", "24px"]}
+          border="0px"
+          height="100%"
+        >
+          <CardBody p={[3, 3, 5]}>
             <Flex
               flexDirection="column"
               height="100%"
@@ -201,17 +217,31 @@ export default function CheckTable() {
             >
               <Stat>
                 <Flex alignItems="center">
-                  <StatLabel color="gray.400">Daily Traffic</StatLabel>
+                  <StatLabel color="gray.400" fontSize={["xs", "xs", "sm"]}>
+                    Daily Traffic
+                  </StatLabel>
                   <Spacer />
-                  <StatHelpText mb={0} as="b" color="green.400">
+                  <StatHelpText
+                    mb={0}
+                    as="b"
+                    color="green.400"
+                    fontSize={["xs", "xs", "sm"]}
+                  >
                     <StatArrow type="increase" />
                     23.36%
                   </StatHelpText>
                 </Flex>
                 <Flex alignItems="center">
-                  <StatLabel color="gray.400">Visitors</StatLabel>
+                  <StatLabel color="gray.400" fontSize={["xs", "xs", "sm"]}>
+                    Visitors
+                  </StatLabel>
                   <Spacer />
-                  <StatNumber>3.454</StatNumber>
+                  <StatNumber
+                    fontSize={["lg", "lg", "xl", "xl"]}
+                    color="primary.900"
+                  >
+                    3.454
+                  </StatNumber>
                 </Flex>
               </Stat>
               <Spacer />
@@ -239,9 +269,14 @@ export default function CheckTable() {
           </CardBody>
         </Card>
       </Box>
-      <Box as={GridItem} colSpan={1}>
-        <Card variant="outline" borderRadius="24px" border="0px" height="100%">
-          <CardBody>
+      <Box as={GridItem}>
+        <Card
+          variant="outline"
+          borderRadius={["12px", "12px", "24px"]}
+          border="0px"
+          height="100%"
+        >
+          <CardBody p={[3, 3, 5]}>
             <Flex alignItems="center">
               <Heading color="primary.900" size="sm">
                 Your Pie Chart
@@ -272,26 +307,28 @@ export default function CheckTable() {
                 </MenuList>
               </Menu>
             </Flex>
-            <PieChart width={250} height={250}>
-              <Pie
-                data={dataPie}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {dataPie.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
+            <Center>
+              <PieChart width={250} height={250}>
+                <Pie
+                  data={dataPie}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {dataPie.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
+            </Center>
           </CardBody>
-          <CardFooter justifyContent="space-between">
+          <CardFooter p={[3, 3, 5]} justifyContent="space-between">
             {dataPie.map((data, key) => (
               <Box key={key}>
                 <Flex alignItems="center" gap="8px">
@@ -299,11 +336,11 @@ export default function CheckTable() {
                     style={{ background: COLORS[key] }}
                     className={`w-2 h-2 inline-block rounded-full`}
                   ></span>
-                  <Text color="gray.400" fontSize="sm">
+                  <Text color="gray.400" fontSize={["xs", "xs", "sm"]}>
                     {data.name}
                   </Text>
                 </Flex>
-                <Text as="b" fontSize="lg">
+                <Text as="b" fontSize={["md", "md", "lg"]}>
                   {data.value}
                 </Text>
               </Box>

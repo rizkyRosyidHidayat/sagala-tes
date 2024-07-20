@@ -23,7 +23,7 @@ export default function RootLayout({
         <Providers>
           <Flex alignItems="flex-start">
             <Sidebar />
-            <Box w="100%" minH="100vh" bg="primary.50" px="20px" pb="20px">
+            <Box w="100%" minH="100vh" bg="primary.50" px={["12px", "12px", "16px", "20px"]} pb="20px">
               {children}
             </Box>
           </Flex>

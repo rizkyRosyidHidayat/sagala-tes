@@ -26,12 +26,16 @@ export default function Header() {
   ];
   return (
     <Box as="header" py="20px">
-      <Flex alignItems="center">
+      <Flex
+        alignItems={["flex-start", "flex-start", "center"]}
+        flexDirection={["column", "column", "row"]}
+        gap={[1, 1, 4]}
+      >
         <Box>
           <Breadcrumb>
             {listPage.map((page, pageKey) => (
               <BreadcrumbItem key={pageKey}>
-                <BreadcrumbLink fontSize="14px" href={page.link}>
+                <BreadcrumbLink fontSize={["10px", "10px", "14px"]} href={page.link}>
                   {page.text}
                 </BreadcrumbLink>
               </BreadcrumbItem>
@@ -40,17 +44,17 @@ export default function Header() {
           <Text
             as="p"
             fontWeight="700"
-            marginTop="-6px"
-            fontSize="4xl"
+            marginTop={["0px", "0px", "0px", "-4px", "-6px", "-6px"]}
+            fontSize={["xl", "xl", "2xl", "3xl", "4xl", "4xl"]}
             color="primary.900"
           >
             Main Dashboard
           </Text>
         </Box>
         <Spacer />
-        <Box px="12px" py="12px" borderRadius="1000px" bgColor="white">
+        <Box px="12px" py="12px" borderRadius="full" bgColor="white" w={["100%", "100%", "auto"]}>
           <Flex alignItems="center" gap="12px">
-            <InputGroup variant="pill">
+            <InputGroup variant="pill" size={["sm", "sm", "md"]}>
               <InputLeftElement pointerEvents="none">
                 <MagnifyingGlassIcon className="size-5" />
               </InputLeftElement>
@@ -59,7 +63,7 @@ export default function Header() {
             {icons("size-7 text-gray-400 cursor-pointer")}
             <Avatar
               name="Admin Panel"
-              size="md"
+              size={["sm", "sm", "md"]}
               bgColor="primary.500"
               color="white"
             />
