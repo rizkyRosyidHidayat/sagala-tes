@@ -98,9 +98,8 @@ export default function RevenueChart() {
             bg="gray.50"
             aria-label="chart revenue this month"
             icon={
-              <ChartBarIcon className="size-5 lg:size-6 text-primary-500" />
+              <ChartBarIcon className="size-6 text-primary-500" />
             }
-            size={["sm", "sm", "md"]}
           />
         </CardHeader>
         <CardBody
@@ -112,7 +111,7 @@ export default function RevenueChart() {
           gap="24px"
         >
           <Flex flexDirection={["row", "row", "column"]} flexShrink={0}>
-            <Stat>
+            <Stat flex={["1 1 0%", "1 1 0%", "0"]}>
               <StatLabel color="gray.400" fontSize={["xs", "xs", "sm"]}>
                 Total Spent
               </StatLabel>
