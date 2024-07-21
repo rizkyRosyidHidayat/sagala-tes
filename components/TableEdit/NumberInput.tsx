@@ -4,7 +4,7 @@ import {
   Text,
   NumberInput as Wrapper,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function NumberInput({
   value,
@@ -22,6 +22,11 @@ export default function NumberInput({
   emitValue: (val: number) => void;
 }) {
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [valueUpdate, setValueUpdate] = useState<number>(0);
+  useEffect(() => {
+    setValueUpdate(value);
+  }, []);
+
   if (isEdit || active)
     return (
       <Wrapper
@@ -29,11 +34,20 @@ export default function NumberInput({
         min={0}
         max={max}
         autoFocus
-        onBlur={() => setIsEdit(false)}
-        onChange={(e) => emitValue(parseInt(e || "0"))}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            setIsEdit(false);
+            emitValue(valueUpdate);
+          }
+        }}
+        onBlur={() => {
+          setIsEdit(false);
+          setValueUpdate(value);
+        }}
+        onChange={(e) => setValueUpdate(parseInt(e || "0"))}
         focusBorderColor="primary.500"
         size="sm"
-        value={value}
+        value={valueUpdate}
         width={100}
       >
         <NumberInputField />

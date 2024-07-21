@@ -1,6 +1,6 @@
 import { formatDate } from "@/utils/helper";
 import { Input, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function DateInput({
   value,
@@ -12,16 +12,29 @@ export default function DateInput({
   emitValue: (val: string) => void;
 }) {
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [valueUpdate, setValueUpdate] = useState<string>("");
+  useEffect(() => {
+    setValueUpdate(value);
+  }, []);
   if (isEdit || active)
     return (
       <Input
         autoFocus={!active}
-        onBlur={() => setIsEdit(false)}
-        onChange={(e) => emitValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            setIsEdit(false);
+            emitValue(valueUpdate);
+          }
+        }}
+        onBlur={() => {
+          setIsEdit(false);
+          setValueUpdate(value);
+        }}
+        onChange={(e) => setValueUpdate(e.target.value)}
         focusBorderColor="primary.500"
         borderColor="gray.200"
         size="sm"
-        value={value}
+        value={valueUpdate}
         type="date-local"
         width={120}
       />

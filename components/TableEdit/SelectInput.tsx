@@ -18,7 +18,7 @@ const options = ["Approved", "Disable", "Error"];
 export default function SelectInput({
   value,
   emitValue,
-  active
+  active,
 }: {
   value: string;
   active?: boolean;
@@ -29,7 +29,10 @@ export default function SelectInput({
     return (
       <Select
         onBlur={() => setIsEdit(false)}
-        onChange={(e) => emitValue(e.target.value)}
+        onChange={(e) => {
+          emitValue(e.target.value);
+          setIsEdit(false);
+        }}
         focusBorderColor="primary.500"
         size="sm"
         value={value}
